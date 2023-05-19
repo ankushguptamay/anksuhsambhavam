@@ -15,10 +15,6 @@ const twilio = require("twilio")(TWILIO_ACCOUNT_SID, TWILIO_AUTH_TOKEN, {
 
 exports.registerUser = async (req, res) => {
     try {
-        // console.log(parseInt(OTP_VALIDITY_IN_MILLISECONDS)/1000/60)
-        // console.log(new Date().getTime() + parseInt(OTP_VALIDITY_IN_MILLISECONDS));
-        // console.log(new Date().getTime())
-        // return;
         const { error } = validateUserRegistration(req.body);
         if (error) {
             console.log(error);
@@ -44,12 +40,11 @@ exports.registerUser = async (req, res) => {
         const sendGridResults = await new MailObject(
             email,
             'Sambhavam-IAS: SignUp verification',
-            `<p>Please use OTP for SignUp: ${otp}. Expires in ${OTP_VALIDITY_IN_MILLISECONDS / 1000 / 60} minutes.</p>`
+            `<p>Please use OTP for SignUp: ${otp}. Expires in ${parseInt(OTP_VALIDITY_IN_MILLISECONDS) / 1000 / 60} minutes.</p>`
         ).sendMail();
         //  Store OTP and studentID
-        // const vallidTill = 
         await EmailOTP.create({
-            vallidTill: parseInt(new Date().getTime() + OTP_VALIDITY_IN_MILLISECONDS),
+            vallidTill: new Date().getTime() + parseInt(OTP_VALIDITY_IN_MILLISECONDS),
             otp: otp,
             userProfileId: user.id
         });
@@ -88,11 +83,11 @@ exports.userLogin = async (req, res) => {
         const sendGridResults = new MailObject(
             email,
             'Sambhavam-IAS: SignUp verification',
-            `<p>Please use OTP for SignUp: ${otp}. Expires in ${OTP_VALIDITY_IN_MILLISECONDS / 1000 / 60} minutes.</p>`
+            `<p>Please use OTP for SignUp: ${otp}. Expires in ${parseInt(OTP_VALIDITY_IN_MILLISECONDS) / 1000 / 60} minutes.</p>`
         ).sendMail();
         //  Store OTP and studentID
         await EmailOTP.create({
-            vallidTill: parseInt(new Date().getTime() + OTP_VALIDITY_IN_MILLISECONDS),
+            vallidTill: new Date().getTime() + parseInt(OTP_VALIDITY_IN_MILLISECONDS),
             otp: otp,
             userProfileId: isUser.id
         });
@@ -132,7 +127,8 @@ exports.verifyOtp = async (req, res) => {
         // is expired?
         const isOtpExpired = new Date().getTime() > parseInt(isOtp.vallidTill);
         if (isOtpExpired) {
-            return res.send({ message: `OTP expired, please regenerate OTP!` });
+            await isOtp.destroy();
+            return res.send({ message: `OTP expired, please regenerate new OTP!` });
         }
         // update profile
         await user.update({
@@ -145,7 +141,7 @@ exports.verifyOtp = async (req, res) => {
             phoneNumber: user.phoneNumber,
         };
         // delete otp from data base only for clear data
-        await isOtp.delete();
+        await isOtp.destroy();
         // authToken
         const accessToken = jwt.sign(
             {
