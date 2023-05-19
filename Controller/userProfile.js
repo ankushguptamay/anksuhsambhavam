@@ -15,6 +15,10 @@ const twilio = require("twilio")(TWILIO_ACCOUNT_SID, TWILIO_AUTH_TOKEN, {
 
 exports.registerUser = async (req, res) => {
     try {
+        // console.log(parseInt(OTP_VALIDITY_IN_MILLISECONDS)/1000/60)
+        // console.log(new Date().getTime() + parseInt(OTP_VALIDITY_IN_MILLISECONDS));
+        // console.log(new Date().getTime())
+        // return;
         const { error } = validateUserRegistration(req.body);
         if (error) {
             console.log(error);
@@ -43,6 +47,7 @@ exports.registerUser = async (req, res) => {
             `<p>Please use OTP for SignUp: ${otp}. Expires in ${OTP_VALIDITY_IN_MILLISECONDS / 1000 / 60} minutes.</p>`
         ).sendMail();
         //  Store OTP and studentID
+        // const vallidTill = 
         await EmailOTP.create({
             vallidTill: parseInt(new Date().getTime() + OTP_VALIDITY_IN_MILLISECONDS),
             otp: otp,
@@ -139,6 +144,8 @@ exports.verifyOtp = async (req, res) => {
             email: email,
             phoneNumber: user.phoneNumber,
         };
+        // delete otp from data base only for clear data
+        await isOtp.delete();
         // authToken
         const accessToken = jwt.sign(
             {
@@ -173,6 +180,43 @@ exports.userProfile = async (req, res) => {
             }
         });
         res.status(200).send(userProfile);
+    } catch (err) {
+        res.status(500).send({ message: err.message });
+    }
+}
+
+exports.updateUserProfile = async (req, res) => {
+    try {
+        const userProfile = await UserProfile.findOne({
+            where: {
+                [Op.and]: [
+                    { id: req.user.id }, { email: req.user.email }
+                ]
+            }
+        });
+        const { name, fatherName, motherName, dateOfBirth, gender, minority, nameOFGuardian,
+            occupationOfGuardian, phoneNumberOfGuardian, academicQualification, maritalStatus, spouseName } = req.body;
+        if (!userProfile) {
+            return res.send({ message: "Profile is not present!" });
+        }
+        await userProfile.update({
+            name: name,
+            fatherName: fatherName,
+            motherName: motherName,
+            dateOfBirth: dateOfBirth,
+            gender: gender,
+            minority: minority,
+            nameOFGuardian: nameOFGuardian,
+            occupationOfGuardian: occupationOfGuardian,
+            phoneNumberOfGuardian: phoneNumberOfGuardian,
+            academicQualification: academicQualification,
+            maritalStatus: maritalStatus,
+            spouseName: spouseName
+        })
+        res.status(200).send({
+            success: 'true',
+            message: `User profile updated!`
+        });
     } catch (err) {
         res.status(500).send({ message: err.message });
     }
