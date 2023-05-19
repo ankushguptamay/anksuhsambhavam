@@ -1,5 +1,6 @@
 const db = require('../Models');
 const UserProfile = db.userProfile;
+const { Op } = require("sequelize");
 
 exports.isUserPreasent = async (req, res, next) => {
     try {
