@@ -8,10 +8,7 @@ const { Op } = require("sequelize");
 const UserProfile = db.userProfile;
 const EmailOTP = db.emailOTP;
 
-const { TWILIO_ACCOUNT_SID, TWILIO_AUTH_TOKEN, TWILIO_SERVICE_SID, JWT_SECRET_KEY, SENDGRID_API_KEY, ADMIN_EMAIL_ID, JWT_ACCESS_VALIDITY_IN_MILLISECONDS, OTP_DIGITS_LENGTH, OTP_VALIDITY_IN_MILLISECONDS } = process.env;
-const twilio = require("twilio")(TWILIO_ACCOUNT_SID, TWILIO_AUTH_TOKEN, {
-    lazyLoading: true
-});
+const { JWT_SECRET_KEY, JWT_ACCESS_VALIDITY_IN_MILLISECONDS, OTP_DIGITS_LENGTH, OTP_VALIDITY_IN_MILLISECONDS } = process.env;
 
 exports.registerUser = async (req, res) => {
     try {

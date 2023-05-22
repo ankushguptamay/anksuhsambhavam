@@ -36,7 +36,7 @@ exports.addUserForm = async (req, res) => {
             comments: req.body.comments,
             graduationYear: req.body.graduationYear,
             graducationYearInProcess: req.body.graducationYearInProcess,
-            isThisFirstAttemptL: req.body.isThisFirstAttempt,
+            isThisFirstAttempt: req.body.isThisFirstAttempt,
             userProfileId: req.user.id
         })
         res.status(200).send({

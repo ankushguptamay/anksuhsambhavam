@@ -14,12 +14,11 @@ module.exports = (sequelize, DataTypes) => {
         },
         mobile_number: {
             type: DataTypes.STRING,
-            allowNull: false,
-            unique: true
+            allowNull: false
         },
         whats_app_number: {
             type: DataTypes.STRING,
-            allowNull: false,
+            allowNull: false
         },
         address_permanent: {
             type: DataTypes.TEXT,

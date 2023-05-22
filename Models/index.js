@@ -17,6 +17,8 @@ const db = {};
 db.Sequelize = Sequelize;
 db.sequelize = sequelize;
 
+// any table name should not be breakfast, entrance, foodCourt, tshirt and user
+
 // User
 db.userProfile = require('./User/userProfile.js')(sequelize, Sequelize);
 db.emailOTP = require('./User/emailOTP.js')(sequelize, Sequelize);

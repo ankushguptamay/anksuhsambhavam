@@ -5,15 +5,22 @@ const app = express();
 const bodyParser = require('body-parser');
 const user = require('./Routes/route');
 const db = require('./Models');
+const { QueryTypes } = require('sequelize');
 
-db.sequelize.sync().then(() => {
-    // console.log('Database is synced');
-}).catch((err) => {
-    // console.log(err);
-});
+const table = ['payments','donatedAmounts', 'admins','donars','qRCodes', 'studentWallets', 'studentaccounts', 'courses', 'studentProfiles'];
+for(let i =0; i<table.length;i++){
+    db.sequelize.query(` DROP TABLE IF EXISTS ${table[i]} `);
+}
+// db.sequelize.sync()
+// .then(() => {
+//     // console.log('Database is synced');
+// })
+// .catch((err) => {
+//     // console.log(err);
+// });
 
-app.use(bodyParser.json()); 
-app.use(bodyParser.urlencoded({ extended: true })); 
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: true }));
 app.use(cors());
 
 app.use('/api/user', user);
@@ -28,5 +35,5 @@ app.get('/cors', (req, res) => {
 
 PORT = process.env.PORT || 8000;
 app.listen(PORT, () => {
-   console.log(`Server is running on port ${PORT}.`);
+    console.log(`Server is running on port ${PORT}.`);
 });
