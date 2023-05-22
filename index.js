@@ -7,17 +7,13 @@ const user = require('./Routes/route');
 const db = require('./Models');
 const { QueryTypes } = require('sequelize');
 
-const table = ['payments','donatedAmounts', 'admins','donars','qRCodes', 'studentWallets', 'studentaccounts', 'courses', 'studentProfiles'];
-for(let i =0; i<table.length;i++){
-    db.sequelize.query(` DROP TABLE IF EXISTS ${table[i]} `);
-}
-// db.sequelize.sync()
-// .then(() => {
-//     // console.log('Database is synced');
-// })
-// .catch((err) => {
-//     // console.log(err);
-// });
+db.sequelize.sync()
+.then(() => {
+    // console.log('Database is synced');
+})
+.catch((err) => {
+    // console.log(err);
+});
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
