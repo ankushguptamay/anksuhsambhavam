@@ -48,7 +48,12 @@ exports.registerUser = async (req, res) => {
 
         res.status(200).send({
             success: 'true',
-            message: `OTP sent to user's Email!`
+            message: `OTP sent to user's Email!`,
+            data:{
+                email:email,
+                name:name,
+                phoneNumber:phoneNumber
+            }
         });
     } catch (err) {
         console.log(err);
@@ -91,7 +96,10 @@ exports.userLogin = async (req, res) => {
 
         res.status(200).send({
             success: 'true',
-            message: `OTP sent to user's Email!`
+            message: `OTP sent to user's Email!`,
+            data:{
+                email:email
+            }
         });
     } catch (err) {
         res.status(500).send({ message: err.message });
