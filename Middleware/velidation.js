@@ -15,3 +15,29 @@ exports.validateUserLogin = (data) => {
     });
     return schema.validate(data);
 }
+
+exports.validateResendRegistration = (data) => {
+    const schema = joi.object().keys({
+        email: joi.string().email().required().label('Email'),
+        phoneNumber: joi.string().length(10).pattern(/^[0-9]+$/).required()
+    });
+    return schema.validate(data);
+}
+
+exports.validateVerifyOTPRegistration = (data) => {
+    const schema = joi.object().keys({
+        email: joi.string().email().required().label('Email'),
+        emailOTP: joi.string().length(6).required(),
+        phoneNumber: joi.string().length(10).pattern(/^[0-9]+$/).required(),
+        mobileOTP: joi.string().length(6).required(),
+    })//.options({ allowUnknown: true });
+    return schema.validate(data);
+}
+
+exports.validateLoginOTP = (data) => {
+    const schema = joi.object().keys({
+        email: joi.string().email().required().label('Email'),
+        emailOTP: joi.string().length(6).required()
+    })//.options({ allowUnknown: true });
+    return schema.validate(data);
+}

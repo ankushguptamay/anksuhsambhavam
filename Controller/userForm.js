@@ -40,7 +40,7 @@ exports.addUserForm = async (req, res) => {
             userProfileId: req.user.id
         })
         res.status(200).send({
-            success: 'true',
+            success: true,
             message: `User form added successfully!`
         });
     } catch (err) {
@@ -53,9 +53,13 @@ exports.userForm = async (req, res) => {
         const userForm = await UserForm.findOne({
             where: {
                 userProfileId: req.user.id
-            } 
+            }
         });
-        res.status(200).send(userForm);
+        res.status(200).send({
+            success: true,
+            message: `User form fetched successfully!`,
+            data: userForm
+        });
     } catch (err) {
         res.status(500).send({ message: err.message });
     }

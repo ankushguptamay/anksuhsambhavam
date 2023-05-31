@@ -21,11 +21,19 @@ db.sequelize = sequelize;
 db.userProfile = require('./User/userProfile.js')(sequelize, Sequelize);
 db.emailOTP = require('./User/emailOTP.js')(sequelize, Sequelize);
 db.userForm = require('./User/userForm.js')(sequelize, Sequelize);
+db.userProfileImage = require('./User/userProfileImage.js')(sequelize, Sequelize);
+db.mobileOTP = require('./User/mobileOTP.js')(sequelize, Sequelize);
 
 db.userProfile.hasOne(db.emailOTP, { foreignKey: 'userProfileId' });
 db.emailOTP.belongsTo(db.userProfile, { foreignKey: 'userProfileId' });
 
 db.userProfile.hasOne(db.userForm, { foreignKey: 'userProfileId' });
 db.userForm.belongsTo(db.userProfile, { foreignKey: 'userProfileId' });
+
+db.userProfile.hasOne(db.mobileOTP, { foreignKey: 'userProfileId' });
+db.mobileOTP.belongsTo(db.userProfile, { foreignKey: 'userProfileId' });
+
+db.userProfile.hasOne(db.userProfileImage, { foreignKey: 'userProfileId' });
+db.userProfileImage.belongsTo(db.userProfile, { foreignKey: 'userProfileId' });
 
 module.exports = db;
