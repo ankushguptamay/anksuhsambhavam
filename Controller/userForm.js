@@ -44,7 +44,10 @@ exports.addUserForm = async (req, res) => {
             message: `User form added successfully!`
         });
     } catch (err) {
-        res.status(500).send({ message: err.message });
+        res.status(500).send({
+            success: false,
+            message: err.message
+        });
     }
 }
 
@@ -61,6 +64,9 @@ exports.userForm = async (req, res) => {
             data: userForm
         });
     } catch (err) {
-        res.status(500).send({ message: err.message });
+        res.status(500).send({
+            success: false,
+            message: err.message
+        });
     }
 }

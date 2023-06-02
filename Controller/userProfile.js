@@ -69,8 +69,10 @@ exports.registerUser = async (req, res) => {
             }
         });
     } catch (err) {
-        console.log(err);
-        res.status(500).send(err);
+        res.status(500).send({
+            success: false,
+            message: err.message
+        });
     }
 };
 
@@ -129,8 +131,10 @@ exports.resendOTPForRegistration = async (req, res) => {
             }
         });
     } catch (err) {
-        console.log(err);
-        res.status(500).send(err);
+        res.status(500).send({
+            success: false,
+            message: err.message
+        });
     }
 };
 
@@ -217,7 +221,10 @@ exports.verifyRegisterOtp = async (req, res) => {
             authToken: authToken
         });
     } catch (err) {
-        res.status(500).send({ message: err.message });
+        res.status(500).send({
+            success: false,
+            message: err.message
+        });
     }
 }
 
@@ -229,6 +236,18 @@ exports.userLogin = async (req, res) => {
             return res.status(400).send(error.details[0].message);
         }
         const { email } = req.body;
+        // Chaking is email present or not
+        const isUser = await UserProfile.findOne({
+            where: {
+                email: email
+            }
+        });
+        if (!isUser) {
+            return res.status(400).send({
+                success: false,
+                message: "First register your self!"
+            });
+        }
         // Is Mobile Number and Email Verified
         const isVerified = await UserProfile.findOne({
             where: {
@@ -241,18 +260,6 @@ exports.userLogin = async (req, res) => {
             return res.status(400).send({
                 success: false,
                 message: "Mobile Number or Email is not verified! First Verify its!"
-            });
-        }
-        // Chaking is email present or not
-        const isUser = await UserProfile.findOne({
-            where: {
-                email: email
-            }
-        });
-        if (!isUser) {
-            return res.status(400).send({
-                success: false,
-                message: "First register your self!"
             });
         }
         // Generate OTP
@@ -278,8 +285,11 @@ exports.userLogin = async (req, res) => {
                 email: email
             }
         });
-    } catch (err) {
-        res.status(500).send({ message: err.message });
+    }catch (err) {
+        res.status(500).send({
+            success: false,
+            message: err.message
+        });
     }
 }
 
@@ -372,7 +382,10 @@ exports.verifyLoginOtp = async (req, res) => {
                 },
             });
     } catch (err) {
-        res.status(500).send({ message: err.message });
+        res.status(500).send({
+            success: false,
+            message: err.message
+        });
     }
 }
 
@@ -391,7 +404,10 @@ exports.userProfile = async (req, res) => {
             data: userProfile
         });
     } catch (err) {
-        res.status(500).send({ message: err.message });
+        res.status(500).send({
+            success: false,
+            message: err.message
+        });
     }
 }
 
@@ -431,6 +447,9 @@ exports.updateUserProfile = async (req, res) => {
             message: `User profile updated!`
         });
     } catch (err) {
-        res.status(500).send({ message: err.message });
+        res.status(500).send({
+            success: false,
+            message: err.message
+        });
     }
 }

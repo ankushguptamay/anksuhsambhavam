@@ -18,7 +18,10 @@ exports.addUserProfileImage = async (req, res) => {
             message: `User Profile Image added successfully!`
         });
     } catch (err) {
-        res.status(500).send({ message: err.message });
+        res.status(500).send({
+            success: false,
+            message: err.message
+        });
     }
 }
 
@@ -33,6 +36,9 @@ exports.userProfileImage = async (req, res) => {
             data: user
         });
     } catch (err) {
-        res.status(500).send({ message: err.message });
+        res.status(500).send({
+            success: false,
+            message: err.message
+        });
     }
 }
