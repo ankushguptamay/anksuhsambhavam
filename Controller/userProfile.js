@@ -363,7 +363,7 @@ exports.verifyLoginOtp = async (req, res) => {
         // delete otp from data base only for clear data
         await isOtp.destroy();
         // authToken
-        const accessToken = jwt.sign(
+        const authToken = jwt.sign(
             {
                 email: email,
                 id: user.id,
@@ -378,8 +378,8 @@ exports.verifyLoginOtp = async (req, res) => {
                 message: `Verification successful!`,
                 data: {
                     userInfo,
-                    accessToken
-                },
+                    authToken
+                }
             });
     } catch (err) {
         res.status(500).send({
